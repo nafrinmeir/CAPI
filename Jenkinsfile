@@ -9,10 +9,30 @@ pipeline {
             }
         }
         
-        stage('Copy Files') {
+        stage('Build Docker Image') {
             steps {
-                // Copy files to Nginx's /var/www/html/ directory
-                sh 'cp -r CAPI/* /var/www/html/'
+                // Build your Docker image (replace 'your-image-name' with the actual image name)
+                script {
+                    docker.build(nginx:latest)
+                }
+            }
+        }
+        
+        stage('Run Container') {
+            steps {
+                // Run the Docker container (replace 'your-image-name' and 'your-container-name' with the actual names)
+                script {
+                    docker.image(nginx:latest).run("-d -p 80:80 --name appone")
+                }
+            }
+        }
+        
+        stage('Copy Files to Container') {
+            steps {
+                // Copy files from the repository to the running container (replace 'your-container-name' with the actual container name)
+                script {
+                    docker.cp("CAPI/*", "appone:/var/www/html/CAPI/")
+                }
             }
         }
     }
