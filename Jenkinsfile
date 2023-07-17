@@ -4,8 +4,12 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                // Clone the repository
-                git 'https://github.com/nafrinmeir/CAPI.git'
+                git(
+                    url: "https://github.com/nafrinmeir/CAPI.git",
+                    branch: "main",
+                    changelog: true,
+                    poll: true
+                )
             }
         }
         
