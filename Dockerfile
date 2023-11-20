@@ -1,8 +1,17 @@
-# Use the official Nginx image as the base image
+# Use an official Nginx base image
 FROM nginx:latest
 
-# Copy your files into the container's web root directory
-COPY CAPI/ /usr/share/nginx/html/
+# Remove the default Nginx configuration
+RUN rm -v /etc/nginx/nginx.conf
 
-# Expose port 80 for HTTP traffic
+# Copy your custom Nginx configuration to the container
+COPY nginx.conf /etc/nginx/
+
+# Copy the built project files to the Nginx web root
+COPY dist/ /usr/share/nginx/html/
+
+# Expose the port that Nginx will run on
 EXPOSE 80
+
+# Command to start Nginx
+CMD ["nginx", "-g", "daemon off;"]
