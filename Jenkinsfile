@@ -26,7 +26,7 @@ pipeline {
             steps {
                 // Run the Docker container (replace 'your-image-name' and 'your-container-name' with the actual names)
                 script {
-                    docker.image(nginx:latest).run("-d -p 80:80 --name appone")
+                    docker.image(nginx:latest).run("-d -p 8010:80 --name appone")
                 }
             }
         }
