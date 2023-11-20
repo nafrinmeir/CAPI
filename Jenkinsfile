@@ -24,14 +24,14 @@ pipeline {
     }
 
         
-        stage('Run Container') {
-            steps {
-                // Run the Docker container (replace 'your-image-name' and 'your-container-name' with the actual names)
-                script {
-                    docker.image(nginx:latest).run("-d -p 8010:80 --name appone")
-                }
+    stage('Run Container') {
+        steps {
+            script {
+                def dockerTool = tool name: 'appone', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
+                dockerTool.image('nginx:latest').run("-d -p 8010:80 --name appone")
             }
         }
+    }
         
         stage('Copy Files to Container') {
             steps {
