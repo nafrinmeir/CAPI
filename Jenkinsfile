@@ -17,7 +17,7 @@ pipeline {
         steps {
             script {
                 // Assuming 'docker' is the tool name configured in Jenkins
-                def dockerTool = tool name: 'docker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
+                def dockerTool = tool name: 'appone', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
                 dockerTool.build("nginx:latest", ".")
             }
         }
