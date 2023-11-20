@@ -17,7 +17,7 @@ pipeline {
             steps {
                 // Build your Docker image (replace 'your-image-name' with the actual image name)
                 script {
-                    docker.build(nginx:latest)
+            docker.build("nginx:latest", ".") // Assuming Dockerfile is in the root of your project
                 }
             }
         }
