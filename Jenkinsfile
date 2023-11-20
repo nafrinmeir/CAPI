@@ -17,7 +17,7 @@ pipeline {
         steps {
             script {
                 def dockerTool = tool name: 'appone', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-                dockerTool.build(".")
+                dockerTool.build()
             }
         }
     }
