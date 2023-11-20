@@ -17,10 +17,11 @@ pipeline {
         steps {
             script {
                 def dockerTool = tool name: 'appone', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-                dockerTool.build(".", "-t nginx:latest")
+                dockerTool.build(".")
             }
         }
     }
+
 
 
         
