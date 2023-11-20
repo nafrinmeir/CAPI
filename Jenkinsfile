@@ -16,12 +16,12 @@ pipeline {
     stage('Build Docker Image') {
         steps {
             script {
-                // Assuming 'docker' is the tool name configured in Jenkins
                 def dockerTool = tool name: 'appone', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-                dockerTool.build("nginx:latest", ".")
+                dockerTool.build(".", "-t nginx:latest")
             }
         }
     }
+
 
         
     stage('Run Container') {
