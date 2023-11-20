@@ -13,14 +13,16 @@ pipeline {
             }
         }
         
-        stage('Build Docker Image') {
-            steps {
-                // Build your Docker image (replace 'your-image-name' with the actual image name)
-                script {
-            docker.build("nginx:latest", ".") // Assuming Dockerfile is in the root of your project
-                }
+    stage('Build Docker Image') {
+        steps {
+            script {
+                // Assuming 'docker' is the tool name configured in Jenkins
+                def dockerTool = tool name: 'docker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
+                dockerTool.build("nginx:latest", ".")
             }
         }
+    }
+
         
         stage('Run Container') {
             steps {
