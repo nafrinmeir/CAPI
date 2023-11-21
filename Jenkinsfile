@@ -2,44 +2,46 @@ pipeline {
     agent any
     
     stages {
-        stage('Clone') {
+        stage('Clone Repository') {
             steps {
-                git(
-                    url: "https://github.com/nafrinmeir/CAPI.git",
-                    branch: "main",
-                    changelog: true,
-                    poll: true
-                )
-            }
-        }
-        
-    stage('Build Docker Image') {
-        steps {
-            script {
-                def dockerTool = tool name: 'appone', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-                dockerTool.build()
-            }
-        }
-    }
-
-
-
-        
-    stage('Run Container') {
-        steps {
-            script {
-                def dockerTool = tool name: 'appone', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-                dockerTool.image('nginx:latest').run("-d -p 8010:80 --name appone")
-            }
-        }
-    }
-        
-        stage('Copy Files to Container') {
-            steps {
-                // Copy files from the repository to the running container (replace 'your-container-name' with the actual container name)
                 script {
-                    docker.cp("CAPI/*", "appone:/var/www/html/CAPI/")
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/nafrinmeir/CAPI.git']]])
                 }
+            }
+        }
+
+        stage('Build and Package') {
+            steps {
+                script {
+                    docker.image('maven:3.8.3-openjdk-11').inside {
+                        sh 'mvn clean package'
+                    }
+                }
+            }
+        }
+
+        stage('Build Nginx Image') {
+            steps {
+                script {
+                    docker.build('nginx-capi', '-f Dockerfile.nginx .')
+                }
+            }
+        }
+
+        stage('Run Nginx Container') {
+            steps {
+                script {
+                    docker.run('-p 8010:80 --name nginx-capi nginx-capi')
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            script {
+                docker.image('nginx-capi').stop()
+                docker.image('nginx-capi').remove()
             }
         }
     }
