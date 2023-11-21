@@ -35,14 +35,5 @@ pipeline {
                 }
             }
         }
-    }
-    
-    post {
-        always {
-            script {
-                docker.image('nginx-capi').stop()
-                docker.image('nginx-capi').remove()
-            }
-        }
-    }
+    } 
 }
